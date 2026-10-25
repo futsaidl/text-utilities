@@ -2,7 +2,7 @@ import logging
 import os
 import string
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, status
 from fastapi.templating import Jinja2Templates
 
 logging.basicConfig(
@@ -15,6 +15,13 @@ logger = logging.getLogger("text_service")
 APP_NAME = os.getenv("APP_NAME", "Text Utilities Service")
 APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
 CHARS_TO_STRIP = string.punctuation.replace("-", "") + "«»—–"
+TRANSLITERATION = {
+    "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
+    "ж": "zh", "з": "z", "и": "i", "й": "y", "к": "k", "л": "l", "м": "m",
+    "н": "n", "о": "o", "п": "p", "р": "r", "с": "s", "т": "t", "у": "u",
+    "ф": "f", "х": "kh", "ц": "ts", "ч": "ch", "ш": "sh", "щ": "shch",
+    "ъ": "", "ы": "y", "ь": "", "э": "e", "ю": "yu", "я": "ya",
+}
 
 app = FastAPI(title=APP_NAME, version=APP_VERSION)
 templates = Jinja2Templates(directory="templates")
@@ -60,9 +67,34 @@ def analyze_text(text: str) -> dict:
         "most_frequent_count": freq_count,
     }
 
+def to_slug(text: str) -> str:
+    text = text.lower()
+    prepped = ""
 
+    for char in text:
+        if char in TRANSLITERATION:
+            prepped += TRANSLITERATION[char]
+        elif "a" <= char <= "z" or char.isdigit():
+            prepped += char
+        else:
+            prepped += "-"
+
+    words = [w for w in prepped.split("-") if w]
+    return "-".join(words)
+    
 @app.get("/")
-def root(request: Request, text_to_analyze: str | None = None):
+def root(request: Request):
+    logger.info("Returned index.html")
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html",
+        context={
+            "app_name": APP_NAME
+        },
+    )
+
+@app.get("/analyzer")
+def analyzer(request: Request, text_to_analyze: str | None = None):
     stats = None
 
     if text_to_analyze and text_to_analyze.strip():
@@ -71,7 +103,7 @@ def root(request: Request, text_to_analyze: str | None = None):
 
     return templates.TemplateResponse(
         request=request,
-        name="index.html",
+        name="analyzer.html",
         context={
             "app_name": APP_NAME,
             "stats": stats,
@@ -88,4 +120,22 @@ def health():
 def version():
     logger.info("App version requested")
     return {"app": APP_NAME, "version": APP_VERSION}
+
+@app.get("/slugify")
+def slugify(text: str):
+    slug = to_slug(text)
+
+    if not slug:
+        logger.error("Failed to generate slug for text %s", text)
+        raise HTTPException (
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Could not generate a valid slug from the provided input."
+        )
+
+    logger.info("Generated slug '%s' for input text", slug)
+    return {
+        "original": text,
+        "slug": slug
+    }
+
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ app_name }}</title>
+        <style>
+            body {
+                font-family: system-ui, -apple-system, sans-serif;
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 0 20px;
+                line-height: 1.5;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Text Utilities</h1>
+        <br>
+        <label>Type or paste your text below to see the:</label>
+        <ul>
+            <li>character count with spaces;</li>
+            <li>character count without spaces;</li>
+            <li>word count;</li>
+            <li>most frequent word.</li>
+        </ul>
+        <form action="/" method="GET">
+            <textarea 
+                name="text_to_analyze"
+                rows="5" 
+                cols="40" 
+                placeholder="Type something here...">{{ text_to_analyze or '' }}</textarea>
+            <br><br>
+            <button type="submit">Analyze</button>
+        </form>
+        {% if stats %}
+            <h2>Results</h2>
+            <ol>
+                <li>Character count: {{ stats.chars_total }}</li>
+                <li>Character count (no spaces): {{ stats.chars_no_spaces }}</li>
+                <li>Word count: {{ stats.word_count }}</li>
+                {% if stats.most_frequent_word %}
+                    <li>Most frequent word: {{ stats.most_frequent_word }} (appears {{ stats.most_frequent_count }} times)</li>
+                {% else %}
+                    <li>No words in the text were found.</li>
+                {% endif %}
+            </ol>
+        {% endif %}
+    </body>
+</html>
