@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 {% block content %}
-        <h1>Text Analyzer</h1>
-        <br>
-        <label>Type or paste your text below to see the:</label>
-        <ul>
-            <li>character count with spaces;</li>
-            <li>character count without spaces;</li>
-            <li>word count;</li>
-            <li>most frequent word.</li>
-        </ul>
-        <form action="/analyzer" method="GET">
-            <textarea 
-                name="text_to_analyze"
-                rows="5" 
-                cols="40" 
-                placeholder="Type something here...">{{ text_to_analyze or '' }}</textarea>
+    <h1>Text Analyzer</h1>
+    <br>
+    <label>Type or paste your text below to see the:</label>
+    <ul>
+        <li>character count with spaces;</li>
+        <li>character count without spaces;</li>
+        <li>word count;</li>
+        <li>most frequent word.</li>
+    </ul>
+    <form action="/analyzer" method="GET">
+        <textarea 
+            name="text_to_analyze"
+            rows="5" 
+            cols="40" 
+            placeholder="Type something here...">{{ text_to_analyze or '' }}</textarea>
             <br><br>
             <button type="submit">Analyze</button>
             <br>
-        </form>
-        {% if stats %}
-            <h2>Results</h2>
-            <ol>
-                <li>Character count: {{ stats.chars_total }}</li>
-                <li>Character count (no spaces): {{ stats.chars_no_spaces }}</li>
-                <li>Word count: {{ stats.word_count }}</li>
-                {% if stats.most_frequent_word %}
-                    <li>Most frequent word: {{ stats.most_frequent_word }} (appears {{ stats.most_frequent_count }} times)</li>
-                {% else %}
-                    <li>No words in the text were found.</li>
-                {% endif %}
-            </ol>
-            <br>
-        {% endif %}
+    </form>
+    {% if stats %}
+        <h2>Results</h2>
+        <ol>
+            <li>Character count: {{ stats.chars_total }}</li>
+            <li>Character count (no spaces): {{ stats.chars_no_spaces }}</li>
+            <li>Word count: {{ stats.word_count }}</li>
+            {% if stats.most_frequent_word %}
+                <li>Most frequent word: {{ stats.most_frequent_word }} (appears {{ stats.most_frequent_count }} times)</li>
+            {% else %}
+                <li>No words in the text were found.</li>
+            {% endif %}
+        </ol>
+        <br>
+    {% endif %}
 {% endblock %}
