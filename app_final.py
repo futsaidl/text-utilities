@@ -81,7 +81,35 @@ def to_slug(text: str) -> str:
 
     words = [w for w in prepped.split("-") if w]
     return "-".join(words)
-    
+
+def convert_case(text: str, mode: str) -> str:
+    words = text.split()
+
+    if mode == "lower":
+        return text.lower()
+    elif mode == "upper":
+        return text.upper()
+    elif mode == "snake":
+        return "_".join(w.lower() for w in words)
+    elif mode == "pascal":
+        return "".join(w.capitalize() for w in words)
+    elif mode == "camel":
+        if not words:
+            return ""
+        return words[0].lower() + "".join(w.capitalize() for w in words[1:])
+    elif mode == "alternating":
+        result = []
+        upper_flag = False
+        for char in text:
+            if char.isalpha():
+                result.append(char.upper() if upper_flag else char.lower())
+                upper_flag = not upper_flag
+            else:
+                result.append(char)
+        return "".join(result)
+
+    return text
+
 @app.get("/")
 def root(request: Request):
     logger.info("Returned index.html")
@@ -94,7 +122,7 @@ def root(request: Request):
     )
 
 @app.get("/analyzer")
-def analyzer(request: Request, text_to_analyze: str | None = None):
+def analyzer_ui(request: Request, text_to_analyze: str | None = None):
     stats = None
 
     if text_to_analyze and text_to_analyze.strip():
@@ -111,17 +139,55 @@ def analyzer(request: Request, text_to_analyze: str | None = None):
         },
     )
 
-@app.get("/health")
+@app.get("/slugify")
+def slugify_ui(request: Request, text: str | None = None):
+    slug = None
+    if text and text.strip():
+        slug = to_slug(text)
+        if slug:
+            logger.info("Generated slug '%s' for input text", slug)
+        else:
+            logger.error("Failed to generate slug for text: %s", text)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="slugify.html",
+        context={
+            "app_name": APP_NAME,
+            "text": text,
+            "slug": slug,
+        },
+    )
+
+@app.get("/case")
+def case_ui(request: Request, text: str | None = None, mode: str = "snake"):
+    result = None
+    if text and text.strip():
+        result = convert_case(text, mode)
+        logger.info("Converted text to case mode '%s'", mode)
+
+    return templates.TemplateResponse(
+        request=request,
+        name="case.html",
+        context={
+            "app_name": APP_NAME,
+            "text": text,
+            "mode": mode,
+            "result": result,
+        },
+    )
+
+@app.get("/api/health")
 def health():
     logger.info("Health check requested")
     return {"status": "ok"}
 
-@app.get("/version")
+@app.get("/api/version")
 def version():
     logger.info("App version requested")
     return {"app": APP_NAME, "version": APP_VERSION}
 
-@app.get("/slugify")
+@app.get("/api/slugify")
 def slugify(text: str):
     slug = to_slug(text)
 

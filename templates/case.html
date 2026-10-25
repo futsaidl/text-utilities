@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Case Switcher</h1>
+    <p>Convert your text into different programming and formatting styles.</p>
+
+    <form action="/case" method="GET">
+        <label for="text"><b>Input text:</b></label><br>
+        <textarea 
+            id="text" 
+            name="text" 
+            rows="4" 
+            placeholder="Type your text here..." 
+            style="width: 100%; max-width: 500px;">{{ text or '' }}</textarea>
+        <br><br>
+
+        <label for="mode"><b>Choose style:</b></label><br>
+        <select id="mode" name="mode">
+            <option value="snake" {% if mode == 'snake' %}selected{% endif %}>snake_case</option>
+            <option value="camel" {% if mode == 'camel' %}selected{% endif %}>camelCase</option>
+            <option value="pascal" {% if mode == 'pascal' %}selected{% endif %}>PascalCase</option>
+            <option value="upper" {% if mode == 'upper' %}selected{% endif %}>UPPERCASE</option>
+            <option value="lower" {% if mode == 'lower' %}selected{% endif %}>lowercase</option>
+            <option value="alternating" {% if mode == 'alternating' %}selected{% endif %}>aLtErNaTiNg CaSe</option>
+        </select>
+        <br><br>
+
+        <button type="submit">Convert</button>
+        <br><br>
+    </form>
+
+    {% if text and text.strip() %}
+        <hr>
+        <p><b>Result:</b></p>
+        <pre><code>{{ result }}</code></pre>
+    {% endif %}
+{% endblock %}

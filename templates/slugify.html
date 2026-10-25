@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Slugify</h1>
+    <p>Type your text below to get the URL-friendly slug text.</p>
+    <p><b>Non-diacritic Latin and Cyrillic is supported.</b></p>
+
+    <form action="/slugify" method="GET">
+        <input 
+            type="text" 
+            name="text" 
+            placeholder="Your text here..." 
+            value="{{ text or '' }}"
+            style="width: 100%; max-width: 400px;">
+        <br><br>
+        <button type="submit">Slugify</button>
+    </form>
+    <br>
+    {% if text is not none and text != '' %}
+        <hr>
+        {% if slug %}
+            <p><b>The slug for your text is:</b> <code>{{ slug }}</code></p>
+        {% else %}
+            <p><b>Error:</b> Could not generate the slug for your text.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

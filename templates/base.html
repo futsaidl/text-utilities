@@ -11,9 +11,61 @@
             padding: 0 16px;
             line-height: 1.5;
         }
+
         h1 { text-align: center; }
+
         h2 { text-align: center; }
+
         nav a { margin-right: 15px; }
+
+        input[type="text"],
+        textarea,
+        select {
+            background-color: #3c3836;
+            color: #ebdbb2;
+            border: 1px solid #504945;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #d79921;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #928374;
+        }
+
+        button,
+        input[type="submit"] {
+            background-color: #d79921;
+            color: #282828;
+            border: 1px solid #d79921;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+        }
+
+        button:hover,
+        input[type="submit"]:hover {
+        background-color: #fe8019;
+        border-color: #fe8019;
+        }
+
+        button:active,
+        input[type="submit"]:active {
+            background-color: #d65d0e;
+        }
     </style>
 </head>
 <body>
