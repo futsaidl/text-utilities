@@ -1,21 +1,6 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ app_name }}</title>
-        <style>
-            body {
-                font-family: system-ui, -apple-system, sans-serif;
-                max-width: 600px;
-                margin: 40px auto;
-                padding: 0 20px;
-                line-height: 1.5;
-            }
-        </style>
-    </head>
-    <body>
-        <h1 style="text-align: center;">Text Utilities</h1>
+{% extends "base.html" %}
+{% block content %}
+        <h1>Text Analyzer</h1>
         <br>
         <label>Type or paste your text below to see the:</label>
         <ul>
@@ -24,7 +9,7 @@
             <li>word count;</li>
             <li>most frequent word.</li>
         </ul>
-        <form action="/" method="GET">
+        <form action="/analyzer" method="GET">
             <textarea 
                 name="text_to_analyze"
                 rows="5" 
@@ -32,6 +17,7 @@
                 placeholder="Type something here...">{{ text_to_analyze or '' }}</textarea>
             <br><br>
             <button type="submit">Analyze</button>
+            <br>
         </form>
         {% if stats %}
             <h2>Results</h2>
@@ -45,6 +31,6 @@
                     <li>No words in the text were found.</li>
                 {% endif %}
             </ol>
+            <br>
         {% endif %}
-    </body>
-</html>
+{% endblock %}
