@@ -122,11 +122,11 @@ def root(request: Request):
     )
 
 @app.get("/analyzer")
-def analyzer_ui(request: Request, text_to_analyze: str | None = None):
+def analyzer_ui(request: Request, text: str | None = None):
     stats = None
 
-    if text_to_analyze and text_to_analyze.strip():
-        stats = analyze_text(text_to_analyze)
+    if text and text.strip():
+        stats = analyze_text(text)
         logger.info("Analyzed text of length %d", stats["chars_total"])
 
     return templates.TemplateResponse(
@@ -135,7 +135,7 @@ def analyzer_ui(request: Request, text_to_analyze: str | None = None):
         context={
             "app_name": APP_NAME,
             "stats": stats,
-            "text_to_analyze": text_to_analyze,
+            "text_to_analyze": text,
         },
     )
 
@@ -178,22 +178,22 @@ def case_ui(request: Request, text: str | None = None, mode: str = "snake"):
     )
 
 @app.get("/api/health")
-def health():
+def health() -> dict:
     logger.info("Health check requested")
     return {"status": "ok"}
 
 @app.get("/api/version")
-def version():
+def version() -> dict:
     logger.info("App version requested")
     return {"app": APP_NAME, "version": APP_VERSION}
 
 @app.get("/api/slugify")
-def slugify(text: str):
+def slugify(text: str) -> dict:
     slug = to_slug(text)
 
     if not slug:
         logger.error("Failed to generate slug for text %s", text)
-        raise HTTPException (
+        raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Could not generate a valid slug from the provided input."
         )
@@ -204,4 +204,39 @@ def slugify(text: str):
         "slug": slug
     }
 
+@app.get("/api/analyzer")
+def analyzer(text: str) -> dict:
+    if not (text and text.strip()):
+        logger.error("Failed to analyze text %s", text)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Could not provide statistics for the provided text."
+        )
+    stats = analyze_text(text)
+    logger.info("Analyzed text of length %d", stats["chars_total"])
+    return stats
 
+@app.get("/api/case")
+def api_case(text: str, mode: str = "snake") -> dict:
+    modes = {"snake", "camel", "pascal", "upper", "lower", "alternating"}
+    if mode not in modes:
+        logger.error("Invalid case mode requested: %s", mode)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Invalid mode '{mode}'. Allowed modes: {', '.join(sorted(modes))}"
+        )
+
+    if not (text and text.strip()):
+        logger.error("Empty text provided for case conversion")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Text cannot be empty."
+        )
+
+    result = convert_case(text, mode)
+    logger.info("Converted text to case mode '%s'", mode)
+    return {
+        "original": text,
+        "mode": mode,
+        "result": result
+    }
