@@ -43,7 +43,7 @@ cd text-utilities
 Create a virtual environment and enter it:
 
 ```bash
-python3 -m venv venv
+python3 -m venv .venv
 source .venv/bin/activate
 ```
 
