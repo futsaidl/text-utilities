@@ -14,6 +14,7 @@ logger = logging.getLogger("text_service")
 
 APP_NAME = os.getenv("APP_NAME", "Text Utilities Service")
 APP_VERSION = os.getenv("APP_VERSION", "1.0.0")
+DEFAULT_CASE_MODE = os.getenv("DEFAULT_CASE_MODE", "snake")
 CHARS_TO_STRIP = string.punctuation.replace("-", "") + "«»—–"
 TRANSLITERATION = {
     "а": "a", "б": "b", "в": "v", "г": "g", "д": "d", "е": "e", "ё": "yo",
@@ -160,7 +161,7 @@ def slugify_ui(request: Request, text: str | None = None):
     )
 
 @app.get("/case")
-def case_ui(request: Request, text: str | None = None, mode: str = "snake"):
+def case_ui(request: Request, text: str | None = None, mode: str = DEFAULT_CASE_MODE):
     result = None
     if text and text.strip():
         result = convert_case(text, mode)
@@ -217,7 +218,7 @@ def analyzer(text: str) -> dict:
     return stats
 
 @app.get("/api/case")
-def api_case(text: str, mode: str = "snake") -> dict:
+def api_case(text: str, mode: str = DEFAULT_CASE_MODE) -> dict:
     modes = {"snake", "camel", "pascal", "upper", "lower", "alternating"}
     if mode not in modes:
         logger.error("Invalid case mode requested: %s", mode)
