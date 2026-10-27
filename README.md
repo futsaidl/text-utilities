@@ -87,7 +87,7 @@ Available values for `DEFAULT_CASE_MODE`:
 | `/api/version`   | GET   | App version   |
 |`/api/analyze`|GET|Analyze text and return JSON|
 |`/api/slugify`|GET|Return slug for the provided text. Non-diacritic Latin and Cyrillic are supported.|
-|`/api/case`|GET|Covert the provided text into a chosen case mode|
+|`/api/case`|GET|Convert the provided text into a chosen case mode|
 |`/`|GET|HTML Jinja2 template for the main page|
 |`/analyze`|GET|HTML Jinja2 template for the text analyzer|
 |`/slugify`|GET|HTML Jinja2 template for the slug generator|
