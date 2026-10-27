@@ -10,8 +10,8 @@ text-utilities
 ├── app_final.py
 ├── .env.example
 ├── .github
-│ └── workflows
-│ └── test.yml
+│   └── workflows
+│       └── test.yml
 ├── .gitignore
 ├── LICENSE.txt
 ├── README.md
@@ -19,14 +19,14 @@ text-utilities
 ├── requirements-dev.txt
 ├── requirements.txt
 ├── templates
-│ ├── analyzer.html
-│ ├── base.html
-│ ├── case.html
-│ ├── index.html
-│ └── slugify.html
+│   ├── analyzer.html
+│   ├── base.html
+│   ├── case.html
+│   ├── index.html
+│   └── slugify.html
 └── tests
-├── test_api.py
-└── test_logic.py
+    ├── test_api.py
+    └── test_logic.py
 ```
 ## Требования
 
