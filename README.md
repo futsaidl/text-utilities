@@ -13,6 +13,7 @@ text-utilities
 │   └── workflows
 │       └── test.yml
 ├── .gitignore
+├── LICENSE.txt
 ├── README.md
 ├── README.ru.md
 ├── requirements-dev.txt
