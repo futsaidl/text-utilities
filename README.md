@@ -68,7 +68,7 @@ export DEFAULT_CASE_MODE="snake"
 ``` 
 Available values for `DEFAULT_CASE_MODE`:
 | Value | Description |
-| :---- | ----------: |
+| :---- | ---------- |
 | `"upper"` | UPPERCASE|
 |`"lower"` | lowercase |
 |`"snake"` | snake_case |
@@ -81,7 +81,7 @@ Available values for `DEFAULT_CASE_MODE`:
 
 
 | Route | Method | Description |
-| :-------- | :--------: | --------: |
+| :-------- | :--------: | -------- |
 | `/api/health`   | GET   | App status check   |
 | `/api/version`   | GET   | App version   |
 |`/api/analyze`|GET|Analyze text and return JSON|
